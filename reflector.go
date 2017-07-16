@@ -22,7 +22,10 @@ func main() {
 		log.Fatal(err)
 	}
 	proxy := httputil.NewSingleHostReverseProxy(targetURL)
-	proxy.Transport = tlspinhttp.NewTransport(pubkey)
+	proxy.Transport, err = tlspinhttp.NewTransport(pubkey)
+	if err != nil {
+		log.Fatal(err)
+	}
 	http.Handle("/", proxy)
 	SetupEnvironment()
 	log.Fatal(http.ListenAndServe(listenAddress, nil))
